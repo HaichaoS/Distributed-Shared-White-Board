@@ -1,8 +1,8 @@
 /**
- * Team: Haichao Song
+ * Haichao Song
  * Description:
  */
-public class Client {
+public class Client{
 
     private ClientGUI clientGUI;
 
@@ -23,6 +23,7 @@ public class Client {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
     }
 }
