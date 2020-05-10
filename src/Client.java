@@ -1,29 +1,27 @@
+import distributedwhiteboard.gui.WhiteboardGUI;
+
+import javax.swing.*;
+
 /**
  * Haichao Song
  * Description:
  */
-public class Client{
+public class Client {
 
-    private ClientGUI clientGUI;
+    public static void main(String[] args) {
 
-    public static void main() {
-        Client client = new Client();
-        client.create();
-    }
+        if (args[0].equals("CreateWhiteBoard")) {
+            SwingUtilities.invokeLater(() -> WhiteboardGUI.getInstance());
+        } else if (args[0].equals("JoinWhiteBoard")) {
+            SwingUtilities.invokeLater(() -> WhiteboardGUI.getInstance());
 
-    public Client() {
-        this.clientGUI = null;
-
-    }
-
-    public void create() {
-        try {
-            this.clientGUI = new ClientGUI();
-            clientGUI.getFrame().setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            System.out.println("Invalid Operation");
+            System.exit(-1);
         }
 
-
     }
+
+
+
 }
