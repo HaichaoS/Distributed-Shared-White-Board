@@ -16,7 +16,7 @@ public interface Server extends Remote {
 
     void approveUser(String userID) throws RemoteException;
 
-    void bounceUser(String userID) throws RemoteException;
+    void kickUser(String userID) throws RemoteException;
 
     void addEvent(Event event) throws RemoteException;
 

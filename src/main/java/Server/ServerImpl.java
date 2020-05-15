@@ -1,5 +1,6 @@
 package main.java.Server;
 
+import java.lang.reflect.Array;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -52,7 +53,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
             for (int i = 0; i < usersList.size(); i++) {
                 if (usersList.get(i).charAt(0) != '#') {
                     hasUser = true;
-                    break;;
+                    break;
                 }
             }
         }
@@ -89,28 +90,63 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     @Override
     public String getManagerID() {
-        return "";
+        return managerID;
     }
 
     @Override
-    public void approveUser(String userID) {
-
+    public void approveUser(String id) {
+        Event userEvent = new Event("userList");
+        synchronized (users) {
+            userEvent.userList = new ArrayList<>(users);
+        }
+        addUserListEvent();
     }
 
     @Override
-    public void bounceUser(String userID) {
+    public void kickUser(String id) {
+        boolean hasUser = false;
+        ArrayList<String> usersList;
+        synchronized (users) {
+            usersList = new ArrayList<>(users);
+        }
+        for (int i = 0; i < usersList.size(); i++) {
+            String user = usersList.get(i);
+            if (user.equals('#' + id)) {
+                hasUser = true;
+            } else if (user.equals(id)) {
+                hasUser = true;
+                synchronized (users) {
+                    users.set(i, '#' + id);
+                }
+                break;
+            }
+        }
+        if (!hasUser) {
+            synchronized (users) {
+                users.add("#" + id);
+            }
+        }
+        addUserListEvent();
+    }
 
+    private void addUserListEvent() {
+        Event event = new Event("userList");
+        synchronized (users) {
+            event.userList = new ArrayList<>(users);
+        }
+        addEvent(event);
     }
 
     @Override
     public synchronized void addEvent(Event event) {
-
+        event.eventID = eventSequence ++;
+        events.add(event);
     }
 
     @Override
     public synchronized ArrayList<Event> getEvents(int startFrom) {
         return new ArrayList<>(
-                masterEvents.subList(startFrom, masterEvents.size()));
+                events.subList(startFrom, events.size()));
     }
 
 }
