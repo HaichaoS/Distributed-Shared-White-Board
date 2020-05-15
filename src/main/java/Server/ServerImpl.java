@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public class ServerImpl extends UnicastRemoteObject implements Server {
 
     private ArrayList<String> users = new ArrayList<>();
-    private ArrayList<Event> masterEvents;
+    private ArrayList<Event> events;
     private int usersSequence;
     private int eventSequence;
-    private String adminID;
+    private String managerID;
 
     private ServerImpl() throws RemoteException {
         super();
@@ -24,7 +24,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     public static void main(String args[]) {
         try {
             String serverName = "localhost";
-            String serviceName = "BoardServer";
+            String serviceName = "Server";
 
             //System.setSecurityManager(new RMISecurityManager());
 
@@ -41,11 +41,54 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     @Override
     public String joinBoard(String id) {
-        return id;
+        String userID;
+        ArrayList<String> usersList;
+        synchronized (users) {
+            usersList = new ArrayList<>(users);
+        }
+
+        boolean hasUser = false;
+        if (usersList != null) {
+            for (int i = 0; i < usersList.size(); i++) {
+                if (usersList.get(i).charAt(0) != '#') {
+                    hasUser = true;
+                    break;;
+                }
+            }
+        }
+
+        if ((usersList == null) || (!hasUser)) {
+            users = new ArrayList<>();
+            events = new ArrayList<>();
+            managerID = id;
+            usersSequence = 0;
+            eventSequence = 0;
+            userID = id;
+            approveUser(userID);
+        } else {
+            for (int i = 0; i < usersList.size(); i++) {
+                String user = usersList.get(i);
+                if (user.charAt(0) == '#') {
+                    user = user.substring(1);
+                }
+                if (user.equals(id)) {
+                    id = id + usersSequence;
+                    break;
+                }
+            }
+            userID = id;
+            Event event = new Event("Join");
+            event.userID = userID;
+            addEvent(event);
+
+        }
+
+        usersSequence += 1;
+        return userID;
     }
 
     @Override
-    public String getManage() {
+    public String getManagerID() {
         return "";
     }
 

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8656dd4-d14d-4aef-9f8d-171ba6e0b051" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/DistributedSharedWhiteBoard.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DistributedSharedWhiteBoard.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Server/ServerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/ServerImpl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+            <state relative-caret-position="150">
+              <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -37,7 +38,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server/Event.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
@@ -51,17 +52,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Server/SercerImpl.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Server/ServerImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1065">
-              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="489">
+              <caret line="72" column="25" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1187#1188#0" expanded="true" />
-                <element signature="e#1212#1213#0" expanded="true" />
-                <element signature="e#1259#1260#0" expanded="true" />
-                <element signature="e#1283#1284#0" expanded="true" />
+                <element signature="e#2264#2265#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -143,9 +141,10 @@
         <option value="$PROJECT_DIR$/src/distributedwhiteboard/Client.java" />
         <option value="$PROJECT_DIR$/src/main/java/Server/BoardServer.java" />
         <option value="$PROJECT_DIR$/src/main/java/Server/ServerEvent.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Server/Server.java" />
         <option value="$PROJECT_DIR$/src/main/java/Server/SercerImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/Server/Event.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Server/Server.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Server/ServerImpl.java" />
       </list>
     </option>
   </component>
@@ -265,12 +264,12 @@
       <workItem from="1589290004585" duration="3085000" />
       <workItem from="1589346338375" duration="1137000" />
       <workItem from="1589507899388" duration="52000" />
-      <workItem from="1589507975363" duration="662000" />
+      <workItem from="1589507975363" duration="2575000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21496000" />
+    <option name="totallyTimeSpent" value="23409000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="824" extended-state="6" />
@@ -407,30 +406,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Server/SercerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1187#1188#0" expanded="true" />
-            <element signature="e#1212#1213#0" expanded="true" />
-            <element signature="e#1259#1260#0" expanded="true" />
-            <element signature="e#1283#1284#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Server/Event.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -439,6 +414,27 @@
             <element signature="imports" expanded="true" />
             <element signature="e#650#651#0" expanded="true" />
             <element signature="e#683#684#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Server/ServerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="489">
+          <caret line="72" column="25" selection-start-line="72" selection-start-column="25" selection-end-line="72" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2264#2265#0" expanded="true" />
           </folding>
         </state>
       </provider>

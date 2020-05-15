@@ -12,7 +12,7 @@ public interface Server extends Remote {
 
     String joinBoard(String candidateID) throws RemoteException;
 
-    String getManage() throws RemoteException;
+    String getManagerID() throws RemoteException;
 
     void approveUser(String userID) throws RemoteException;
 
