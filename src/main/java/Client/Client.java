@@ -20,6 +20,7 @@ public class Client {
     public static String userID;
     public static String managerID;
     public static boolean isManager;
+    public static ClientGUI clientGUI;
 
 
     public static void main(String[] args) {
@@ -55,7 +56,12 @@ public class Client {
     }
 
     public static void initialize() {
-
+        try {
+            clientGUI = new ClientGUI(isManager);
+            clientGUI.getFrame().setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
