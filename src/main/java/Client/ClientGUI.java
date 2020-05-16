@@ -73,8 +73,8 @@ public class ClientGUI {
 
         frame.getContentPane().setLayout(new BorderLayout());
 
-        sharedPanel = new SharedPanel(server, userID, frame);
-        frame.getContentPane().add(sharedPanel, BorderLayout.CENTER);
+        SharedPanel = new SharedPanel(server, userID, frame);
+        frame.getContentPane().add(SharedPanel, BorderLayout.CENTER);
 
         JScrollPane scrollPane = new JScrollPane();
         userPanel = new UserPanel(server, userID, scrollPane);
@@ -82,20 +82,19 @@ public class ClientGUI {
         scrollPane.getViewport().add(userPanel);
         frame.getContentPane().add(scrollPane, BorderLayout.EAST);
 
-
-        frame.setTitle("Distributed Whiteboard");
-        frame.setSize(828, 893);
+        frame.setTitle("Distributed WhiteBoard");
+        frame.setSize(1100, 700);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(false);
 
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
-                sharedPanel.requestFocusInWindow();
+                SharedPanel.requestFocusInWindow();
             }
         });
 
-        new Thread(new EventDispatcher(sharedPanel, userPanel), "EventDispatcher").start();
+        new Thread(new EventDispatcher(SharedPanel, userPanel), "EventDispatcher").start();
 
     }
 
