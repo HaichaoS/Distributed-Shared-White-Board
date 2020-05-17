@@ -1,8 +1,12 @@
 package main.java.Client;
 
+import javax.swing.*;
+
 /**
  * Haichao Song
  * Description:
  */
-public class SharedPanel {
+public class UserPanel extends JPanel {
+
+
 }

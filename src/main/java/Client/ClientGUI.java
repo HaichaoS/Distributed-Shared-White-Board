@@ -1,6 +1,6 @@
 package main.java.Client;
 
-import main.java.Server.Event;
+import main.java.Server.ServerEvent;
 import main.java.Server.Server;
 
 import javax.swing.*;
@@ -20,6 +20,8 @@ public class ClientGUI {
     private boolean isManger;
     private JFrame frame;
     public static Server server;
+    public static BoardPanel boardPanel;
+    private static UserPanel userPanel;
 
     public ClientGUI (boolean isManager) {
         this.isManger = isManager;
@@ -56,9 +58,9 @@ public class ClientGUI {
                             "Exit Confirmation", JOptionPane.YES_NO_OPTION);
                     if (choice == JOptionPane.YES_OPTION) {
                         if (server != null) {
-                            Event event = new Event("Terminate");
+                            ServerEvent serverEvent = new ServerEvent("Terminate");
                             try {
-                                server.addEvent(event);
+                                server.addEvent(serverEvent);
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
@@ -73,8 +75,8 @@ public class ClientGUI {
 
         frame.getContentPane().setLayout(new BorderLayout());
 
-        SharedPanel = new SharedPanel(server, userID, frame);
-        frame.getContentPane().add(SharedPanel, BorderLayout.CENTER);
+        boardPanel = new BoardPanel(server, userID, frame);
+        frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
 
         JScrollPane scrollPane = new JScrollPane();
         userPanel = new UserPanel(server, userID, scrollPane);
@@ -90,11 +92,11 @@ public class ClientGUI {
 
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
-                SharedPanel.requestFocusInWindow();
+                BoardPanel.requestFocusInWindow();
             }
         });
 
-        new Thread(new EventDispatcher(SharedPanel, userPanel), "EventDispatcher").start();
+        new Thread(new EventDispatcher(boardPanel, userPanel), "EventDispatcher").start();
 
     }
 

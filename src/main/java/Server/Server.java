@@ -18,8 +18,8 @@ public interface Server extends Remote {
 
     void kickUser(String userID) throws RemoteException;
 
-    void addEvent(Event event) throws RemoteException;
+    void addEvent(ServerEvent serverEvent) throws RemoteException;
 
-    ArrayList<Event> getEvents(int startFrom) throws RemoteException;
+    ArrayList<ServerEvent> getEvents(int startFrom) throws RemoteException;
 
 }
