@@ -23,16 +23,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class BoardPanel extends JPanel implements ActionListener, KeyListener {
 
-    private Server server;
+    public Server server;
     private String id;
-    private JFrame frame;
+    public JFrame frame;
     private MouseAdapter mouseAdapter;
     private Mode currentMode;
     private Color currentColor = getForeground();
     private boolean currentFill = false;
     private boolean currentErase = false;
     private int eraserSize = 1;
-    private ArrayList<Shape> shapes = new ArrayList<>();
+    public ArrayList<Shape> shapes = new ArrayList<>();
     private ArrayList<String> textInput;
     private Point startPoint = new Point(5, 10);
     private ArrayList<Point> points;
@@ -82,7 +82,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         }
 
         menu.add(new AbstractAction("Exit") {
-            private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1;
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -221,6 +221,17 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         menuBar.add(menu);
 
         frame.setJMenuBar(menuBar);
+    }
+
+    public synchronized void addShape(Shape shape) {
+        shapes.add(shape);
+    }
+
+    @Override
+    public synchronized void paintComponent(Graphics gfx) {
+        for (Shape shape : shapes) {
+            shape.draw(gfx);
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ public class Client {
     public static String managerID;
     public static boolean isManager;
     public static ClientGUI clientGUI;
+    public static BoardPanel boardPanel;
 
 
     public static void main(String[] args) {

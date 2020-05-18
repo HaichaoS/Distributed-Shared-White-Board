@@ -92,11 +92,11 @@ public class ClientGUI {
 
         frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
-                BoardPanel.requestFocusInWindow();
+                boardPanel.requestFocusInWindow();
             }
         });
 
-        new Thread(new EventDispatcher(boardPanel, userPanel), "EventDispatcher").start();
+        new Thread(new EventHandler(boardPanel, userPanel), "EventDispatcher").start();
 
     }
 

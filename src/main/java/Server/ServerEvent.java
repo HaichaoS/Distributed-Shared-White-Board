@@ -1,6 +1,7 @@
 package main.java.Server;
 
 import main.java.Client.Mode;
+import main.java.Client.Shape;
 
 import java.awt.*;
 import java.io.Serializable;
