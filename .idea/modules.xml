@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Distributed-Shared-White-Board.iml" filepath="$PROJECT_DIR$/Distributed-Shared-White-Board.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/DistributedSharedWhiteBoard.iml" filepath="$PROJECT_DIR$/.idea/DistributedSharedWhiteBoard.iml" />
     </modules>
   </component>

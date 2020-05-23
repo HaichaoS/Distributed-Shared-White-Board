@@ -1,7 +1,7 @@
-package main.java.Client;
+package Client;
 
-import main.java.Server.Server;
-import main.java.Server.ServerEvent;
+import Server.Server;
+import Server.BoardEvent;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -23,48 +23,42 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class BoardPanel extends JPanel implements ActionListener, KeyListener {
 
-    public Server server;
-    private String id;
-    public JFrame frame;
-    private MouseAdapter mouseAdapter;
-    private Mode currentMode;
-    private Color currentColor = getForeground();
-    private boolean currentFill = false;
-    private boolean currentErase = false;
-    private int eraserSize = 1;
-    public ArrayList<Shape> shapes = new ArrayList<>();
-    private ArrayList<String> textInput;
+    protected Server server;
+    protected JFrame frame;
+    protected ArrayList<Shape> shapes = new ArrayList<>();
     private Point startPoint = new Point(5, 10);
+    private Mode currentMode = Mode.LINE;
+    private boolean currentFill = false;
+    private Color currentColor = getForeground();
+    private boolean currentEraser = false;
+    private int eraserSize = 1;
     private ArrayList<Point> points;
+    private ArrayList<String> textInput;
 
-
-
-    public BoardPanel(Server server, String id, JFrame frame) {
-        this.server = server;
-        this.id = id;
+    public BoardPanel(Server bServer, JFrame frame) {
+        this.server = bServer;
         this.frame = frame;
-        mouseAdapter = new MouseAdapter();
+        MouseAdapter mouseAdapter = new MouseAdapter();
         addMouseListener(mouseAdapter);
         addMouseMotionListener(mouseAdapter);
         addKeyListener(this);
-        createMenu();
+        createMenuBar();
     }
 
-    public void createMenu() {
+    private void createMenuBar() {
+
         JMenuBar menuBar = new JMenuBar();
-
-
         JMenu menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
 
         if (Client.isManager) {
-            JMenuItem menuItem = new JMenuItem("New Board");
+            JMenuItem menuItem = new JMenuItem("Reset");
             menuItem.setActionCommand("NewBoard");
             menuItem.addActionListener(this);
             menuItem.setMnemonic(KeyEvent.VK_N);
             menu.add(menuItem);
 
-            menuItem = new JMenuItem("Open File...");
+            menuItem = new JMenuItem("Open");
             menuItem.setActionCommand("OpenFile");
             menuItem.addActionListener(this);
             menuItem.setMnemonic(KeyEvent.VK_O);
@@ -72,7 +66,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
 
             menu.addSeparator();
 
-            menuItem = new JMenuItem("Save As...");
+            menuItem = new JMenuItem("Save");
             menuItem.setActionCommand("SaveAs");
             menuItem.addActionListener(this);
             menuItem.setMnemonic(KeyEvent.VK_S);
@@ -82,12 +76,13 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         }
 
         menu.add(new AbstractAction("Exit") {
-            private static final long serialVersionUID = 1;
+            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (frame.isActive()) {
-                    WindowEvent windowClosing = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+                    WindowEvent windowClosing = new WindowEvent(frame,
+                            WindowEvent.WINDOW_CLOSING);
                     frame.dispatchEvent(windowClosing);
                 }
             }
@@ -95,7 +90,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
 
         menuBar.add(menu);
 
-        menu = new JMenu("Shapes");
+        menu = new JMenu("Modes");
         menu.setMnemonic(KeyEvent.VK_S);
         JRadioButtonMenuItem rbMenuItem;
 
@@ -124,7 +119,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         menu.add(rbMenuItem);
 
         rbMenuItem = new JRadioButtonMenuItem("Free Line");
-        rbMenuItem.setActionCommand("Free Hand");
+        rbMenuItem.setActionCommand("Free Line");
         rbMenuItem.addActionListener(this);
         rbMenuItem.setMnemonic(KeyEvent.VK_F);
         group.add(rbMenuItem);
@@ -139,7 +134,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
 
         menuBar.add(menu);
 
-        JMenu menuMode = new JMenu("Mode");
+        JMenu menuMode = new JMenu("Fill");
         menuMode.setMnemonic(KeyEvent.VK_M);
 
         group = new ButtonGroup();
@@ -203,22 +198,11 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         rbMenuItem.setActionCommand("Large");
         rbMenuItem.addActionListener(this);
         rbMenuItem.setSelected(true);
-        rbMenuItem.setMnemonic(KeyEvent.VK_M);
+        rbMenuItem.setMnemonic(KeyEvent.VK_L);
         group.add(rbMenuItem);
         menuEraser.add(rbMenuItem);
 
         menuBar.add(menuEraser);
-
-        menu = new JMenu("Help");
-        menu.setMnemonic(KeyEvent.VK_H);
-
-        menuItem = new JMenuItem("About...");
-        menuItem.setActionCommand("About");
-        menuItem.addActionListener(this);
-        menuItem.setMnemonic(KeyEvent.VK_A);
-        menu.add(menuItem);
-
-        menuBar.add(menu);
 
         frame.setJMenuBar(menuBar);
     }
@@ -256,14 +240,14 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
             case "Oval":
                 currentMode = Mode.OVAL;
                 break;
-            case "Free Line":
+            case "Free Hand":
                 currentMode = Mode.FREEFORM_LINE;
                 break;
             case "Text":
                 currentMode = Mode.TEXT;
                 break;
             case "Colors":
-                currentColor = JColorChooser.showDialog(this, "Fill Color...", getForeground());
+                currentColor = JColorChooser.showDialog(this, "Fill Color", getForeground());
                 break;
             case "Unfilled":
                 currentFill = false;
@@ -272,7 +256,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
                 currentFill = true;
                 break;
             case "ToggleErase":
-                currentErase = !currentErase;
+                currentEraser = !currentEraser;
                 break;
             case "Small":
                 eraserSize = 1;
@@ -283,23 +267,19 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
             case "Large":
                 eraserSize = 3;
                 break;
-            case "About":
-                aboutApp();
-                break;
         }
     }
 
     private void newBoard() {
-        ServerEvent event = new ServerEvent("loadBoard");
+        BoardEvent event = new BoardEvent("loadBoard");
         event.shapes = new ArrayList<>();
         try {
-            server.addEvent(event);
+            server.addBoardEvent(event);
         } catch (RemoteException e1) {
             e1.printStackTrace();
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void loadBoard() {
         JFileChooser chooser = new JFileChooser();
         FileFilter[] filefilters = chooser.getChoosableFileFilters();
@@ -317,10 +297,10 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
                         chooser.getSelectedFile()));
                 Object board = is.readObject();
                 if (board instanceof ArrayList<?>) {
-                    ServerEvent event = new ServerEvent("loadBoard");
+                    BoardEvent event = new BoardEvent("loadBoard");
                     event.shapes = (ArrayList<Shape>) board;
                     try {
-                        server.addEvent(event);
+                        server.addBoardEvent(event);
                     } catch (RemoteException e1) {
                         e1.printStackTrace();
                     }
@@ -379,11 +359,11 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
                 textInput.set(lastLine, lastStr + c);
             }
             //send to server
-            ServerEvent event = new ServerEvent("keyTyped");
+            BoardEvent event = new BoardEvent("keyTyped");
             event.startPoint = startPoint;
             event.textInput = textInput;
             try {
-                server.addEvent(event);
+                server.addBoardEvent(event);
             } catch (RemoteException e1) {
                 e1.printStackTrace();
             }
@@ -398,22 +378,17 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
-    private void aboutApp() {
-        JOptionPane.showMessageDialog(frame, "Distributed Board\nBy: Walid Moustafa\nMIT\nMelbourne University",
-                "About Shared Board", JOptionPane.INFORMATION_MESSAGE);
-    }
-
     class MouseAdapter extends MouseInputAdapter {
 
         @Override
         public void mouseMoved(MouseEvent e) {
             if ((textInput != null) && (!textInput.isEmpty())) {
                 //send to server
-                ServerEvent event = new ServerEvent("mouseMoved");
+                BoardEvent event = new BoardEvent("mouseMoved");
                 event.startPoint = startPoint;
                 event.textInput = textInput;
                 try {
-                    server.addEvent(event);
+                    server.addBoardEvent(event);
                 } catch (RemoteException e1) {
                     e1.printStackTrace();
                 }
@@ -427,7 +402,7 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         @Override
         public void mousePressed(MouseEvent e) {
             startPoint = e.getPoint();
-            if (currentErase || (currentMode == Mode.FREEFORM_LINE)) {
+            if (currentEraser || (currentMode == Mode.FREEFORM_LINE)) {
                 points = new ArrayList<>();
             }
         }
@@ -436,12 +411,12 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
         public void mouseDragged(MouseEvent e) {
             Point endPoint = e.getPoint();
 
-            if (currentErase || (currentMode == Mode.FREEFORM_LINE)) {
+            if (currentEraser || (currentMode == Mode.FREEFORM_LINE)) {
                 points.add(new Point(e.getX(), e.getY()));
             }
 
             //send to server
-            ServerEvent event = new ServerEvent("mouseDragged");
+            BoardEvent event = new BoardEvent("mouseDragged");
             sendServer(event, endPoint);
         }
 
@@ -450,26 +425,25 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
             Point endPoint = e.getPoint();
 
             //send to server
-            ServerEvent event = new ServerEvent("mouseReleased");
+            BoardEvent event = new BoardEvent("mouseReleased");
             sendServer(event, endPoint);
         }
-    }
 
-    public void sendServer(ServerEvent event, Point endPoint) {
-        event.currentMode = currentMode;
-        event.currentFill = currentFill;
-        event.currentColor = currentColor;
-        event.currentErase = currentErase;
-        event.eraserSize = eraserSize;
-        event.startPoint = startPoint;
-        event.endPoint = endPoint;
-        event.points = points;
-        try {
-            server.addEvent(event);
-        } catch (RemoteException e1) {
-            e1.printStackTrace();
+        public void sendServer(BoardEvent event, Point endPoint) {
+            event.currentMode = currentMode;
+            event.currentFill = currentFill;
+            event.currentColor = currentColor;
+            event.currentEraser = currentEraser;
+            event.eraserSize = eraserSize;
+            event.startPoint = startPoint;
+            event.endPoint = endPoint;
+            event.points = points;
+            try {
+                server.addBoardEvent(event);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
         }
+
     }
-
-
 }

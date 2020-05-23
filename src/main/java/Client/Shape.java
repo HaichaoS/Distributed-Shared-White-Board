@@ -1,4 +1,4 @@
-package main.java.Client;
+package Client;
 
 import java.awt.*;
 
@@ -11,4 +11,3 @@ public interface Shape {
     void draw(Graphics gfx);
 
 }
-

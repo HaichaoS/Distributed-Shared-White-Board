@@ -1,13 +1,19 @@
-package main.java.Client;
-
-import javax.swing.*;
-import java.awt.*;
+package Client;
 
 /**
  * Haichao Song
  * Description:
  */
-public class UserList extends DefaultListCellRenderer {
+
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+
+class UserList extends DefaultListCellRenderer {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     public Component getListCellRendererComponent(JList<?> list,

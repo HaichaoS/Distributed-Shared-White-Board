@@ -1,6 +1,7 @@
-package main.java.Client;
+package Client;
 
-import main.java.Server.ServerEvent;
+
+import Server.BoardEvent;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
@@ -25,11 +26,11 @@ public class EventHandler implements Runnable {
         this.userPanel = userPanel;
     }
 
-    private void dispatch(ServerEvent event) {
+    private void dispatch(BoardEvent event) {
         switch (event.eventType) {
             case "Terminate":
-                JOptionPane.showMessageDialog(boardPanel.frame, "Whiteboard Session was terminated by Admin",
-                        "Session Terminated", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(boardPanel.frame, "Whiteboard Sharing is ended by the manager",
+                        "Terminated", JOptionPane.INFORMATION_MESSAGE);
                 try {
                     boardPanel.server.kickUser(Client.userID);
                 } catch (RemoteException e) {
@@ -38,7 +39,7 @@ public class EventHandler implements Runnable {
                 System.exit(0);
             case "joinRequest":
                 int choice = JOptionPane.showConfirmDialog(boardPanel.frame,
-                        event.userID + " wants to join. Allow user?",
+                        event.userID + "wants to share your whiteboard",
                         "Join Request", JOptionPane.YES_NO_OPTION);
                 try {
                     if (choice == JOptionPane.YES_OPTION) {
@@ -52,12 +53,12 @@ public class EventHandler implements Runnable {
                 break;
             case "userList":
                 authorized = false;
-                for (String auser : event.userList) {
-                    if (auser.equals(Client.userID)) {
+                for (String user : event.userList) {
+                    if (user.equals(Client.userID)) {
                         joinRequestReplied = true;
                         authorized = true;
                         break;
-                    } else if (auser.equals("#" + Client.userID)) {
+                    } else if (user.equals("#" + Client.userID)) {
                         joinRequestReplied = true;
                         authorized = false;
                         break;
@@ -70,8 +71,8 @@ public class EventHandler implements Runnable {
                         Vector<String> uIDs = new Vector<>(event.userList);
                         userPanel.refresh(uIDs);
                     } else {
-                        JOptionPane.showMessageDialog(boardPanel.frame, "Access to Board was denied by Admin",
-                                "Access Denied", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(boardPanel.frame, "Access to whiteboard " +
+                                        "was denied by the manager", "Denied", JOptionPane.INFORMATION_MESSAGE);
                         System.exit(0);
                     }
                 }
@@ -81,27 +82,27 @@ public class EventHandler implements Runnable {
                 boardPanel.frame.repaint();
                 break;
             case "keyTyped":
-                Text.draw(boardPanel.getGraphics(), event.startPoint, event.textInput);
+                Text.drawText(boardPanel.getGraphics(), event.startPoint, event.textInput);
                 break;
             case "mouseMoved":
                 boardPanel.addShape(new Text(event.startPoint, event.textInput));
                 break;
             case "mouseDragged":
-                if (event.currentErase) {
-                    Eraser.draw(boardPanel.getGraphics(), event.eraserSize, event.points);
+                if (event.currentEraser) {
+                    Eraser.drawEraser(boardPanel.getGraphics(), event.eraserSize, event.points);
                 } else {
                     switch (event.currentMode) {
                         case LINE:
                             Line.draw(boardPanel.getGraphics(), event.startPoint, event.endPoint);
                             break;
                         case RECT:
-                            Rect.draw(boardPanel.getGraphics(), event.startPoint, event.endPoint, event.currentMode, event.currentColor);
+                            Rect.drawRect(boardPanel.getGraphics(), event.startPoint, event.endPoint, event.currentFill, event.currentColor);
                             break;
                         case OVAL:
-                            Oval.draw(boardPanel.getGraphics(), event.startPoint, event.endPoint, event.currentMode, event.currentColor);
+                            Oval.drawOval(boardPanel.getGraphics(), event.startPoint, event.endPoint, event.currentFill, event.currentColor);
                             break;
                         case FREEFORM_LINE:
-                            FreeHand.draw(boardPanel.getGraphics(), event.points);
+                            FreeLine.drawFreeLine(boardPanel.getGraphics(), event.points);
                             break;
                         case TEXT:
                             break;
@@ -113,7 +114,7 @@ public class EventHandler implements Runnable {
                 boardPanel.frame.repaint();
                 break;
             case "mouseReleased":
-                if (event.currentErase) {
+                if (event.currentEraser) {
                     boardPanel.addShape(new Eraser(event.points, event.eraserSize));
                 } else {
                     switch (event.currentMode) {
@@ -121,13 +122,13 @@ public class EventHandler implements Runnable {
                             boardPanel.addShape(new Line(event.startPoint, event.endPoint));
                             break;
                         case RECT:
-                            boardPanel.addShape(new Rect(event.startPoint, event.endPoint, event.currentMode, event.currentColor));
+                            boardPanel.addShape(new Rect(event.startPoint, event.endPoint, event.currentFill, event.currentColor));
                             break;
                         case OVAL:
-                            boardPanel.addShape(new Oval(event.startPoint, event.endPoint, event.currentMode, event.currentColor));
+                            boardPanel.addShape(new Oval(event.startPoint, event.endPoint, event.currentFill, event.currentColor));
                             break;
                         case FREEFORM_LINE:
-                            boardPanel.addShape(new FreeHand(event.points));
+                            boardPanel.addShape(new FreeLine(event.points));
                             break;
                         case TEXT:
                             break;
@@ -144,18 +145,18 @@ public class EventHandler implements Runnable {
     @Override
     public void run() {
         while (true) {
-            ArrayList<ServerEvent> boardEvents;
+            ArrayList<BoardEvent> boardEvents;
             try {
-                boardEvents = boardPanel.server.getEvents(nextEventID);
+                boardEvents = boardPanel.server.getBoardEvents(nextEventID);
 
-                for (ServerEvent event : boardEvents) {
+                for (BoardEvent event : boardEvents) {
                     if (event.eventType.equals("joinRequest") && Client.isManager) {
                         dispatch(event);
                     }
                 }
 
-                ServerEvent latestUserList = null;
-                for (ServerEvent event : boardEvents) {
+                BoardEvent latestUserList = null;
+                for (BoardEvent event : boardEvents) {
                     if (event.eventType.equals("userList")) {
                         latestUserList = event;
                     }
@@ -169,13 +170,13 @@ public class EventHandler implements Runnable {
                     continue;
                 }
 
-                for (ServerEvent event : boardEvents) {
+                for (BoardEvent event : boardEvents) {
                     if (!(event.eventType.equals("joinRequest") || event.eventType.equals("userList"))) {
                         dispatch(event);
                     }
                 }
 
-                if (boardEvents.size() > 0) {
+                if ((boardEvents).size() > 0) {
                     nextEventID = boardEvents.get(boardEvents.size() - 1).eventID + 1;
                 }
             } catch (RemoteException e) {
@@ -183,4 +184,6 @@ public class EventHandler implements Runnable {
             }
         }
     }
+
 }
+

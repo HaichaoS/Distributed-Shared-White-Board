@@ -1,23 +1,26 @@
-package main.java.Server;
+package Server;
+
+import javax.swing.*;
+import java.rmi.server.UnicastRemoteObject;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 /**
  * Haichao Song
  * Description:
  */
-public class ServerImpl extends UnicastRemoteObject implements Server {
+public class ServerURO extends UnicastRemoteObject implements Server {
 
+    private static JFrame frame;
     private ArrayList<String> users = new ArrayList<>();
-    private ArrayList<ServerEvent> serverEvents;
-    private int usersSequence;
-    private int eventSequence;
+    private ArrayList<BoardEvent> boardEvents;
+    private int usersNum, eventsNum;
     private String managerID;
+    private static ServerGUI serverGUI;
 
-    private ServerImpl() throws RemoteException {
+    private ServerURO() throws RemoteException {
         super();
     }
 
@@ -26,17 +29,35 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
             String serverName = "localhost";
             String serviceName = "Server";
 
-            //System.setSecurityManager(new RMISecurityManager());
+            Server obj = new ServerURO();
 
-            Server server = new ServerImpl();
-            // Bind this object instance to the name "BoardServer"
-            Naming.rebind("rmi://" + serverName + "/" + serviceName, server);
+            // Bind this object instance to the name "Server"
+            Naming.rebind("rmi://" + serverName + "/" + serviceName, obj);
 
-            System.out.println("Successful rebind service");
+            System.out.println("Server Start Succeed");
+
+            create(serverName, serviceName);
 
         } catch (Exception e) {
-            System.out.println("ServerImpl err: " + e.getMessage());
+            System.out.println("Server Error: " + e.getMessage());
         }
+    }
+
+    public static void create(String ServerName, String ServiceName) {
+
+        try {
+
+            serverGUI = new ServerGUI(ServerName, ServiceName);
+            serverGUI.getFrame().setVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printLog(String s) {
+        System.out.println(s);
+        if (serverGUI != null) serverGUI.getTextArea().append(s + '\n');
     }
 
     @Override
@@ -49,8 +70,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
         boolean hasUser = false;
         if (usersList != null) {
-            for (int i = 0; i < usersList.size(); i++) {
-                if (usersList.get(i).charAt(0) != '#') {
+            for (String user : usersList) {
+                if (user.charAt(0) != '#') {
                     hasUser = true;
                     break;
                 }
@@ -59,44 +80,42 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
         if ((usersList == null) || (!hasUser)) {
             users = new ArrayList<>();
-            serverEvents = new ArrayList<>();
+            boardEvents = new ArrayList<>();
             managerID = id;
-            usersSequence = 0;
-            eventSequence = 0;
+            usersNum = 0;
+            eventsNum = 0;
             userID = id;
             approveUser(userID);
         } else {
-            for (int i = 0; i < usersList.size(); i++) {
-                String user = usersList.get(i);
+            for (String user : usersList) {
                 if (user.charAt(0) == '#') {
                     user = user.substring(1);
                 }
                 if (user.equals(id)) {
-                    id = id + usersSequence;
+                    id = id + usersNum;
                     break;
                 }
             }
             userID = id;
-            ServerEvent serverEvent = new ServerEvent("Join");
+            BoardEvent serverEvent = new BoardEvent("joinRequest");
             serverEvent.userID = userID;
-            addEvent(serverEvent);
+            addBoardEvent(serverEvent);
 
         }
 
-        usersSequence += 1;
+        usersNum += 1;
         return userID;
     }
 
     @Override
-    public String getManagerID() {
+    public String getManager() {
         return managerID;
     }
 
     @Override
-    public void approveUser(String id) {
-        ServerEvent userServerEvent = new ServerEvent("userList");
+    public void approveUser(String userID) {
         synchronized (users) {
-            userServerEvent.userList = new ArrayList<>(users);
+            users.add(userID);
         }
         addUserListEvent();
     }
@@ -129,23 +148,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
 
     private void addUserListEvent() {
-        ServerEvent serverEvent = new ServerEvent("userList");
+        BoardEvent event = new BoardEvent("userList");
         synchronized (users) {
-            serverEvent.userList = new ArrayList<>(users);
+            event.userList = new ArrayList<>(users);
         }
-        addEvent(serverEvent);
+        addBoardEvent(event);
     }
 
     @Override
-    public synchronized void addEvent(ServerEvent serverEvent) {
-        serverEvent.eventID = eventSequence ++;
-        serverEvents.add(serverEvent);
+    public synchronized void addBoardEvent(BoardEvent event) {
+        event.eventID = eventsNum++;
+        boardEvents.add(event);
     }
 
     @Override
-    public synchronized ArrayList<ServerEvent> getEvents(int startFrom) {
-        return new ArrayList<>(
-                serverEvents.subList(startFrom, serverEvents.size()));
+    public synchronized ArrayList<BoardEvent> getBoardEvents(int startFrom) {
+        return new ArrayList<>(boardEvents.subList(startFrom, boardEvents.size()));
     }
-
 }

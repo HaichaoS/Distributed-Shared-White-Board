@@ -1,4 +1,4 @@
-package main.java.Server;
+package Server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -12,14 +12,15 @@ public interface Server extends Remote {
 
     String joinBoard(String candidateID) throws RemoteException;
 
-    String getManagerID() throws RemoteException;
+    String getManager() throws RemoteException;
 
     void approveUser(String userID) throws RemoteException;
 
     void kickUser(String userID) throws RemoteException;
 
-    void addEvent(ServerEvent serverEvent) throws RemoteException;
+    void addBoardEvent(BoardEvent event) throws RemoteException;
 
-    ArrayList<ServerEvent> getEvents(int startFrom) throws RemoteException;
+    ArrayList<BoardEvent> getBoardEvents(int startFrom) throws RemoteException;
 
 }
+

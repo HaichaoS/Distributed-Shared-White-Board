@@ -1,4 +1,4 @@
-package main.java.Client;
+package Client;
 
 /**
  * Haichao Song
@@ -18,17 +18,7 @@ public enum Mode {
     FREEFORM_LINE('f');
 
     public final char mode;
-    private Mode(char val) { this.mode = val; }
-
-    public static Mode parseChar(char c)
-    {
-        for (Mode m : Mode.values()) {
-            if (m.mode == c)
-                return m;
-        }
-        System.out.printf("Unknown DrawType '%c'%n", c);
-        return null;
-    }
+    Mode(char val) { this.mode = val; }
 
     @Override
     public String toString()

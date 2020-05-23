@@ -1,10 +1,12 @@
-package main.java.Client;
+package Client;
 
-import main.java.Server.Server;
+/**
+ * Haichao Song
+ * Description:
+ */
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import Server.Server;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,47 +15,46 @@ import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
 import java.util.Vector;
 
-/**
- * Haichao Song
- * Description:
- */
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 public class UserPanel extends JPanel implements ActionListener, ListSelectionListener, KeyListener {
 
-    private static final long serialVersionUID = 1L;
-    private Server server;
-    private String id;
-    private JScrollPane scrollPane;
-    private JList<String> usersList;
-    private JButton bounceButton;
-    private Vector<String> userIDs = new Vector<>();
+    private final Server server;
+    private final String userID;
+    private final JScrollPane scrollPane;
+    private final JList<String> usersList;
+    private JButton kickButton;
+    private final Vector<String> userIDs = new Vector<>();
     private String selectedUser;
 
-    public UserPanel(Server server, String id, JScrollPane scrollPane) {
+    public UserPanel(Server server, String uID, JScrollPane sPane) {
         this.server = server;
-        this.id = id;
-        this.scrollPane = scrollPane;
-        setBorder(BorderFactory.createTitledBorder("Board Users"));
+        this.userID = uID;
+        this.scrollPane = sPane;
+        setBorder(BorderFactory.createTitledBorder("Users"));
         setLayout(new BorderLayout());
 
         if (Client.isManager) {
-            bounceButton = new JButton("Bounce");
-            add(bounceButton, BorderLayout.SOUTH);
-            bounceButton.addActionListener(this);
+            kickButton = new JButton("Kick");
+            add(kickButton, BorderLayout.SOUTH);
+            kickButton.addActionListener(this);
         }
 
         usersList = new JList<>(userIDs);
-        UserList userList = new UserList();
-        usersList.setCellRenderer(userList);
+        UserList renderer = new UserList();
+        usersList.setCellRenderer(renderer);
         add(usersList, BorderLayout.CENTER);
         usersList.addListSelectionListener(this);
         addKeyListener(this);
     }
 
-    public synchronized void refresh(Vector<String> uIDs) {
+    public synchronized void refresh(Vector<String> users) {
         userIDs.removeAllElements();
-        for (String auser : uIDs) {
-            if (auser.charAt(0) != '#') {
-                userIDs.add(auser);
+        for (String user : users) {
+            if (user.charAt(0) != '#') {
+                userIDs.add(user);
             }
         }
         usersList.setListData(userIDs);
@@ -72,11 +73,11 @@ public class UserPanel extends JPanel implements ActionListener, ListSelectionLi
             String stringValue = usersList.getSelectedValue();
             if (stringValue != null) {
                 selectedUser = stringValue;
-                if (bounceButton != null) {
+                if (kickButton != null) {
                     if (selectedUser.equalsIgnoreCase(Client.managerID)) {
-                        bounceButton.setEnabled(false);
+                        kickButton.setEnabled(false);
                     } else {
-                        bounceButton.setEnabled(true);
+                        kickButton.setEnabled(true);
                     }
                 }
             }
@@ -85,7 +86,7 @@ public class UserPanel extends JPanel implements ActionListener, ListSelectionLi
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == bounceButton) {
+        if (event.getSource() == kickButton) {
             int selection = usersList.getSelectedIndex();
             if (selection >= 0) {
                 try {
@@ -109,6 +110,5 @@ public class UserPanel extends JPanel implements ActionListener, ListSelectionLi
     @Override
     public void keyReleased(KeyEvent e) {
     }
-
 
 }
