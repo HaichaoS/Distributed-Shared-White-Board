@@ -1,7 +1,10 @@
 package Server;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Haichao Song
@@ -10,16 +13,15 @@ import java.awt.*;
 public class ServerGUI {
 
     private JFrame frame;
-    private JTextArea textArea;
-    private String serverName, serviceName;
+    private String address, port;
 
     public JFrame getFrame() {
         return frame;
     }
 
-    public ServerGUI (String serverName, String serviceName) {
-        this.serverName = serverName;
-        this.serviceName = serviceName;
+    public ServerGUI (String address, String port){
+        this.address = address;
+        this.port = port;
         create();
     }
 
@@ -30,16 +32,15 @@ public class ServerGUI {
         frame.setBounds(100, 100, 450, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel port = new JLabel("Server Name: " + serverName);
-        JLabel path = new JLabel("Service Name: " + serviceName);
+        JLabel addressLabel = new JLabel("Address: " + address);
+        JLabel portLabel = new JLabel("Port: " + port);
 
-        JLabel log = new JLabel("Log:");
-        JScrollPane scrollPane = new JScrollPane();
+        JPanel panel = new JPanel();
+        JLabel jlabel = new JLabel("WELCOME");
+        jlabel.setFont(new Font("Verdana",1,20));
+        panel.add(jlabel);
+        panel.setBorder(new LineBorder(Color.BLACK));
 
-        textArea = new JTextArea();
-        textArea.setLineWrap(true);
-        textArea.setEditable(false);
-        scrollPane.setViewportView(textArea);
 
         // Render the server GUI
         GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
@@ -47,35 +48,25 @@ public class ServerGUI {
                 groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addGap(5)
-                                .addComponent(port, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                .addComponent(addressLabel, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                                 .addGap(5)
-                                .addComponent(path, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                        .addGroup(groupLayout.createSequentialGroup()
-                                .addGap(5)
-                                .addComponent(log, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(portLabel, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                                .addComponent(panel, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                        .addGap(5))
         );
         groupLayout.setVerticalGroup(
                 groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addGap(5)
                                 .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(port, GroupLayout.PREFERRED_SIZE,
-                                                30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(path, GroupLayout.PREFERRED_SIZE,
-                                                30, GroupLayout.PREFERRED_SIZE))
-                                .addGap(10)
-                                .addComponent(log, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(addressLabel, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(portLabel, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                                 .addGap(5)
-                                .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                                .addComponent(panel, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                        .addGap(5))
         );
         frame.getContentPane().setLayout(groupLayout);
-
-    }
-
-    public JTextArea getTextArea() {
-        return textArea;
     }
 }

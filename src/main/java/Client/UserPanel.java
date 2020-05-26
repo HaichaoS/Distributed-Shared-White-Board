@@ -5,7 +5,7 @@ package Client;
  * Description:
  */
 
-import Server.Server;
+import Remote.IServer;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,17 +21,15 @@ import javax.swing.event.ListSelectionListener;
 
 public class UserPanel extends JPanel implements ActionListener, ListSelectionListener, KeyListener {
 
-    private final Server server;
-    private final String userID;
+    private final IServer IServer;
     private final JScrollPane scrollPane;
     private final JList<String> usersList;
     private JButton kickButton;
     private final Vector<String> userIDs = new Vector<>();
     private String selectedUser;
 
-    public UserPanel(Server server, String uID, JScrollPane sPane) {
-        this.server = server;
-        this.userID = uID;
+    public UserPanel(IServer IServer, JScrollPane sPane) {
+        this.IServer = IServer;
         this.scrollPane = sPane;
         setBorder(BorderFactory.createTitledBorder("Users"));
         setLayout(new BorderLayout());
@@ -90,7 +88,7 @@ public class UserPanel extends JPanel implements ActionListener, ListSelectionLi
             int selection = usersList.getSelectedIndex();
             if (selection >= 0) {
                 try {
-                    server.kickUser(selectedUser);
+                    IServer.kickUser(selectedUser);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -100,7 +98,7 @@ public class UserPanel extends JPanel implements ActionListener, ListSelectionLi
 
     @Override
     public void keyTyped(KeyEvent e) {
-        Client.boardPanel.keyTyping(e);
+        ClientGUI.getBoardPanel().keyTyping(e);
     }
 
     @Override
