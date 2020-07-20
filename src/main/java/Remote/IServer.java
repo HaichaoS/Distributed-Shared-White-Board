@@ -9,11 +9,8 @@ import java.util.ArrayList;
 /**
  * Haichao Song
  * Description:
- * RMI Remote interface - must be shared between client and server.
- * All methods must throw RemoteException.
- * All parameters and return types must be either primitives or Serializable.
- * Any object that is a remote object must implement this interface.
- * Only those methods specified in a "remote interface" are available remotely.
+ * Remote contains the IServer Interface which is shared between the client and the server.
+ * It includes all the functions provided by the system to the client.
  */
 public interface IServer extends Remote {
 

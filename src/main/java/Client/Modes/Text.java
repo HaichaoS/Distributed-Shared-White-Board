@@ -7,6 +7,7 @@ import java.util.ArrayList;
 /**
  * Haichao Song
  * Description:
+ * responsible for defining the way text draws on the whiteboard
  */
 public class Text implements Shape, Serializable {
 

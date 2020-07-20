@@ -9,6 +9,8 @@ import java.util.ArrayList;
 /**
  * Haichao Song
  * Description:
+ * defining all the attributes needed in the board information communication
+ * handling the events happening on the board.
  */
 public class BoardHandler implements Serializable {
 

@@ -1,12 +1,6 @@
 package Client;
 
-/**
- * Haichao Song
- * Description:
- */
-
 import Remote.IServer;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,11 +8,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
 import java.util.Vector;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+/**
+ * Haichao Song
+ * Description:
+ * responsible for 1) defining the user list on the white board
+ * 2) handling function for manager to kick users
+ * 3) refreshing and updating the user list 4) call add board events to send the event to the server.
+ */
 public class UserPanel extends JPanel implements ActionListener, ListSelectionListener, KeyListener {
 
     private final IServer IServer;

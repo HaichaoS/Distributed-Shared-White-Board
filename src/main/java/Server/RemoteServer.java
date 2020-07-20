@@ -61,7 +61,7 @@ public class RemoteServer extends UnicastRemoteObject implements IServer {
                 }
             }
             userID = id;
-            BoardHandler serverEvent = new BoardHandler("joinRequest");
+            BoardHandler serverEvent = new BoardHandler("join");
             serverEvent.userID = userID;
             addBoardEvent(serverEvent);
 

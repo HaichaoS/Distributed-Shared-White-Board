@@ -4,14 +4,9 @@ import Client.Modes.Mode;
 import Client.Modes.Shape;
 import Remote.IServer;
 import Server.BoardHandler;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -22,6 +17,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 /**
  * Haichao Song
  * Description:
+ * responsible for 1) defining the menu on the white board
+ * 2) handling functions on the menu
+ * 3) call add board events to send the event to the server.
  */
 public class BoardPanel extends JPanel implements ActionListener, KeyListener {
 
@@ -316,7 +314,11 @@ public class BoardPanel extends JPanel implements ActionListener, KeyListener {
                             "Corrupted File", JOptionPane.INFORMATION_MESSAGE);
                 }
                 ois.close();
-            } catch (Exception e) {
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

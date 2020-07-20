@@ -1,7 +1,6 @@
 package Client;
 
 import Remote.IServer;
-
 import javax.swing.*;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -11,6 +10,7 @@ import java.rmi.RemoteException;
 /**
  * Haichao Song
  * Description:
+ * connecting the IServer and create the client GUI
  */
 public class Client {
 

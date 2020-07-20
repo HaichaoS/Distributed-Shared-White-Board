@@ -10,10 +10,11 @@ import java.util.ArrayList;
 /**
  * Haichao Song
  * Description:
+ * responsible for defining the way eraser draws on the whiteboard
  */
 public class Eraser implements Shape, Serializable {
 
-    private static final int seed = 3;
+    private static int seed = 3;
     private int size;
     private ArrayList<Point> points;
 
@@ -28,7 +29,7 @@ public class Eraser implements Shape, Serializable {
         int y = (point.y - size) > 0 ? (point.y - size) : 0;
         int width = size * 2;
         int height = size * 2;
-
+        gfx.setColor(Color.WHITE);
         gfx.fillRect(x, y, width, height);
     }
 

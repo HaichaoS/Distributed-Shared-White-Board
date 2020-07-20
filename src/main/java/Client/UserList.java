@@ -1,16 +1,15 @@
 package Client;
 
-/**
- * Haichao Song
- * Description:
- */
-
 import java.awt.Color;
 import java.awt.Component;
-
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
+/**
+ * Haichao Song
+ * Description:
+ * responsible for defining the basic color setting of the user list
+ */
 class UserList extends DefaultListCellRenderer {
 
     private Color background;

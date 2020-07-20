@@ -3,12 +3,11 @@ package Server;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * Haichao Song
  * Description:
+ * The GUI shows the address and port number to users
  */
 public class ServerGUI {
 

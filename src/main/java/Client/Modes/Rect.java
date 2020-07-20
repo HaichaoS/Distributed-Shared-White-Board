@@ -1,13 +1,13 @@
 package Client.Modes;
 
-/**
- * Haichao Song
- * Description:
- */
-
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * Haichao Song
+ * Description:
+ * responsible for defining the way rectangular draws on the whiteboard
+ */
 public class Rect implements Shape, Serializable {
 
     private final Point startPoint;

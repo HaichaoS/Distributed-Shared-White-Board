@@ -7,6 +7,7 @@ import java.util.ArrayList;
 /**
  * Haichao Song
  * Description:
+ * responsible for defining the way free line draws on the whiteboard
  */
 public class FreeLine implements Shape, Serializable {
 

@@ -1,12 +1,11 @@
 package Client.Modes;
 
-import Client.Client;
-
 import java.awt.*;
 
 /**
  * Haichao Song
  * Description:
+ * interface for all modes users can choose
  */
 public interface Shape {
 
